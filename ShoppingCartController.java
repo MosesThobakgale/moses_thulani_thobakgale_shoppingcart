@@ -12,12 +12,12 @@ public class ShoppingCartController {
 
     // Endpoint to add item to cart
     @PostMapping("/addItem")
-    public String addItemToCart(@RequestParam String cartId,
+    public String addItem(@RequestParam String cartId,
                                 @RequestParam String itemName,
                                 @RequestParam BigDecimal price,
                                 @RequestParam int quantity) {
 
-        Cart cart = carts.computeIfAbsent(cartId, k -> new Cart());
+        Cart cart = carts.computeIfAbsent(cartId, id -> new Cart());
         cart.addItem(new CartItem(itemName, price, quantity));
 
         return "Item added to cart. Total: " + cart.getTotal();
