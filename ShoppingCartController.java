@@ -8,85 +8,34 @@ import java.util.Map;
 public class ShoppingCartController {
 
     // Store carts in memory (in real app, this would be a database)
-    private Map<String, Map<String, Object>> carts = new HashMap<>();
+    private Map<String, Cart> carts = new HashMap<>();
 
+    // Endpoint to add item to cart
     @PostMapping("/addItem")
-    public String addItem(@RequestParam("cartId") String cartId,
-        @RequestParam("itemName") String itemName,
-        @RequestParam("price") double price,
-        @RequestParam("quantity") int quantity) {
+    public String addItemToCart(@RequestParam String cartId,
+                                @RequestParam String itemName,
+                                @RequestParam BigDecimal price,
+                                @RequestParam int quantity) {
 
-        // Get or create cart
-        Map<String, Object> cart = carts.get(cartId);
-        if (cart == null) {
+        Cart cart = carts.computeIfAbsent(cartId, k -> new Cart());
+        cart.addItem(new CartItem(itemName, price, quantity));
 
-            cart = new HashMap<>();
-
-            carts.put(cartId, cart);
-
-        }
-
-        // Add item to cart
-        String itemKey = itemName + "_" + price;
-
-        if (cart.containsKey(itemKey)) {
-
-            // Item already exists, update quantity
-            int existingQty = (int) cart.get(itemKey);
-            cart.put(itemKey, existingQty + quantity);
-
-        } 
-        else {
-
-            cart.put(itemKey, quantity);
-
-        }
-
-        // Calculate total
-        double total = 0;
-
-        for (String key : cart.keySet()) {
-
-            String[] parts = key.split("_");
-            double itemPrice = Double.parseDouble(parts[1]);
-            int itemQty = (int) cart.get(key);
-            total = total + (itemPrice * itemQty);
-
-        }
-
-        System.out.println("Cart " + cartId + " total: " + total);
-
-        return "Item added. Total: " + total;
-
+        return "Item added to cart. Total: " + cart.getTotal();
     }
 
-    @GetMapping("/getTotal")
-    public String getTotal(@RequestParam("cartId") String cartId) {
+    // Endpoint to get cart total
+    @GetMapping("/cartTotal")
+    public String getTotal(@RequestParam String cartId) {
 
-        Map<String, Object> cart = carts.get(cartId);
-
-        if (cart == null) {
-
-            return "Cart not found";
-
-        }
-
-        // Calculate total
-        double total = 0;
-
-        for (String key : cart.keySet()) {
-
-            String[] parts = key.split("_");
-            double itemPrice = Double.parseDouble(parts[1]);
-            int itemQty = (int) cart.get(key);
-            total = total + (itemPrice * itemQty);
-
-        }
-
-        return "Total: " + total;
-
-    }
     
+        Cart cart = carts.get(cartId);
+        
+        if (cart == null) {
+            return "Cart not found.";
+        }
+        return "Cart total: " + cart.getTotal();
+
+    }
 
 }
 
