@@ -87,4 +87,43 @@ public class ShoppingCartController {
 
     }
     
+
+}
+
+
+// Value object that represents an item
+
+class CartItem {
+    
+    private String name;
+    private BigDecimal price;
+    private int quantity;
+
+    public CartItem(String name, BigDecimal price, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    // Getters and setters
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void increaseQuantity(int amount) {
+        this.quantity += amount;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return price.multiply(BigDecimal.valueOf(quantity));
+    }
+
 }
