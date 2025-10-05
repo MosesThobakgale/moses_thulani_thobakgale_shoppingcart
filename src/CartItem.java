@@ -2,8 +2,8 @@ package src;
 import java.math.BigDecimal;
 
 public class CartItem {
-    private String name;
-    private BigDecimal price; // BigDecimal for currency, better precision
+    private final String name;
+    private final BigDecimal price; // BigDecimal for currency, better precision
     private int quantity;
 
     public CartItem(String name, BigDecimal price, int quantity) {

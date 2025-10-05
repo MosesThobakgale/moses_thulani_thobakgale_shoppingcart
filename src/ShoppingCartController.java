@@ -11,7 +11,7 @@ import java.util.Map;
 public class ShoppingCartController {
 
     // Store carts in memory (in real app, this would be a database)
-    private Map<String, Cart> carts = new HashMap<>();
+    private final Map<String, Cart> carts = new HashMap<>();
 
     // Add item to cart
     @PostMapping("/addItem")
