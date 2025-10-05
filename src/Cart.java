@@ -31,7 +31,8 @@ public class Cart{
     }
 
     public List<CartItem> getItems() {
-        return items;
+        return Collections.unmodifiableList(items);
     }
+
 
 }
