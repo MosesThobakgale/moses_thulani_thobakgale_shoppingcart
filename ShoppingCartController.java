@@ -99,6 +99,7 @@ class CartItem {
     private BigDecimal price;
     private int quantity;
 
+
     public CartItem(String name, BigDecimal price, int quantity) {
         this.name = name;
         this.price = price;
@@ -126,4 +127,30 @@ class CartItem {
         return price.multiply(BigDecimal.valueOf(quantity));
     }
 
+}
+
+
+// model class that represents a shopping cart
+class Cart {
+
+    private List<CartItem> items = new ArrayList<>(); 
+
+    public void addItem(CartItem newItem) {
+        // Check if item already exists, if so, increase quantity
+        for (CartItem existingItem : items) {
+            if (existingItem.getName().equals(newItem.getName()) &&
+                existingItem.getPrice().equals(newItem.getPrice())) {
+                existingItem.increaseQuantity(newItem.getQuantity());
+                return;
+            }
+        }
+        items.add(newItem);
+    }
+
+    public BigDecimal getTotal() {
+        // Calculate total of all items
+        return items.stream()
+            .map(CartItem::getTotalPrice)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
